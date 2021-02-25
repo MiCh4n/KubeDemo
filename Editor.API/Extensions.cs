@@ -1,19 +1,19 @@
-﻿using Catalog.API.Dtos;
-using Catalog.API.Entities;
+﻿using Editor.API.Dtos;
+using Editor.API.Entities;
 
-namespace Catalog.API
+namespace Editor.API
 {
     public static class Extensions
     {
-        public static ItemDto AsDto(this Item item)
+        public static PersonDto AsDto(this Person person)
         {
-            return new ItemDto
+            return new PersonDto
             {
-                Id = item.Id,
-                Name = item.Name,
-                Description = item.Description,
-                Price = item.Price,
-                DateAdd = item.DateAdd
+                Id = person.Id,
+                Name = person.Name,
+                Surname = person.Surname,
+                Age = person.Age,
+                DateAdd = person.DateAdd
             };
         }
     }

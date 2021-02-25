@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalog.API.Repositories;
-using Catalog.API.Settings;
+using Editor.API.Repositories;
+using Editor.API.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -41,7 +41,7 @@ namespace Catalog.API
                 return new MongoClient(settings.ConnectionString);
             });
             
-            services.AddSingleton<IItemsRepository, ItemsRepository>();
+            services.AddSingleton<IPersonsRepository, PersonsRepository>();
             
             services.AddControllers();
             services.AddSwaggerGen(c =>

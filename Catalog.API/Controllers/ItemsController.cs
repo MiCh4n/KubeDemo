@@ -49,7 +49,7 @@ namespace Catalog.API.Controllers
             {
                 Id = Guid.NewGuid(),
                 Name = itemDto.Name,
-                Description = itemDto.Name,
+                Description = itemDto.Description,
                 Price = itemDto.Price,
                 DateAdd = DateTime.Now
             };
