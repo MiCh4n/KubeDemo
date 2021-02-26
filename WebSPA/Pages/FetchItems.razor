@@ -1,0 +1,142 @@
+﻿@page "/items"
+@inject HttpClient Http
+
+<h1>Items list</h1>
+
+@if (items == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr id="editRow" style="display:@editRowStyle">
+            <td>
+                <input @bind="editItem.Name"/>
+            </td>
+            <td>
+                <input @bind="editItem.Description"/>
+            </td>
+            <td>
+                <input @bind="editItem.Price"/>
+            </td>
+            <td class="text-center">
+                <button class="btn btn-success" @onclick="@SaveItem">Save</button>
+                <button class="btn btn-danger" @onclick="@(() => editRowStyle = "none")">Cancel</button>
+            </td>
+        </tr>
+        @* GET *@
+        @foreach (var item in items)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@item.Price $</td>
+                <td>@item.DateAdd</td>
+                <td class="text-center">
+                    @* PUT *@
+                    <button class="btn btn-warning" @onclick="@(() => EditItem(item.Id))">Edit</button>
+                    @* DELETE *@
+                    <button class="btn btn-danger" @onclick="@(async () => await DeleteItem(item.Id))">Delete</button>
+                </td>
+            </tr>
+            <br>
+            <br>
+        }
+        @* POST *@
+        <h3>Add item</h3>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+        <tr id="addRow">
+            <td>
+                <input @bind="newItemName" placeholder="Name"/>
+            </td>
+            <td>
+                <textarea @bind="newItemDescription" placeholder="Description" />
+            </td>
+            <td>
+                <input @bind="newItemPrice" placeholder="Price"/>
+            </td>
+            <td class="text-center">
+                <button class="btn btn-success" @onclick="@AddItem">Add</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private const string ServiceEndpoint = "https://localhost:5001/api/item";
+    private Item[] items;
+    private Item editItem = new();
+    private string editRowStyle = "none";
+    private string newItemName;
+    private string newItemDescription;
+    private decimal newItemPrice;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetItems();
+    }
+
+    private async Task GetItems()
+    {
+        items = await Http.GetFromJsonAsync<Item[]>(ServiceEndpoint);
+    }
+
+    private void EditItem(Guid id)
+    {
+        editItem = items.Single(i => i.Id == id);
+        editRowStyle = "table-row";
+    }
+
+    private async Task AddItem()
+    {
+        var addItem = new Item {Name = newItemName, Description = newItemDescription, Price = newItemPrice};
+        await Http.PostAsJsonAsync(ServiceEndpoint, addItem);
+        newItemName = string.Empty;
+        newItemDescription = string.Empty;
+        newItemPrice = 0;
+        await GetItems();
+        editRowStyle = "none";
+    }
+
+    private async Task SaveItem()
+    {
+        await Http.PutAsJsonAsync($"{ServiceEndpoint}/{editItem.Id}", editItem);
+        await GetItems();
+        editRowStyle = "none";
+    }
+
+    private async Task DeleteItem(Guid id)
+    {
+        await Http.DeleteAsync($"{ServiceEndpoint}/{id}");
+        await GetItems();
+        editRowStyle = "none";
+    }
+
+    public class Item
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+        public DateTime DateAdd { get; set; }
+    }
+
+}

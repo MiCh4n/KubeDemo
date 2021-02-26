@@ -1,0 +1,142 @@
+﻿@page "/persons"
+@inject HttpClient Http
+
+<h1>Persons list</h1>
+
+@if (persons == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Age</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr id="editRow" style="display:@editRowStyle">
+            <td>
+                <input @bind="editPerson.Name"/>
+            </td>
+            <td>
+                <input @bind="editPerson.Surname"/>
+            </td>
+            <td>
+                <input @bind="editPerson.Age"/>
+            </td>
+            <td class="text-center">
+                <button class="btn btn-success" @onclick="@SavePerson">Save</button>
+                <button class="btn btn-danger" @onclick="@(() => editRowStyle = "none")">Cancel</button>
+            </td>
+        </tr>
+        @* GET *@
+        @foreach (var person in persons)
+        {
+            <tr>
+                <td>@person.Name</td>
+                <td>@person.Surname</td>
+                <td>@person.Age</td>
+                <td>@person.DateAdd</td>
+                <td class="text-center">
+                    @* PUT *@
+                    <button class="btn btn-warning" @onclick="@(() => EditPerson(person.Id))">Edit</button>
+                    @* DELETE *@
+                    <button class="btn btn-danger" @onclick="@(async () => await DeletePerson(person.Id))">Delete</button>
+                </td>
+            </tr>
+            <br>
+            <br>
+        }
+        @* POST *@
+        <h3>Add person</h3>
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Age</th>
+        </tr>
+        <tr id="addRow">
+            <td>
+                <input @bind="newPersonName" placeholder="Name"/>
+            </td>
+            <td>
+                <input @bind="newPersonSurname" placeholder="Surname" />
+            </td>
+            <td>
+                <input @bind="newPersonAge" placeholder="Age"/>
+            </td>
+            <td class="text-center">
+                <button class="btn btn-success" @onclick="@AddPerson">Add</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private const string ServiceEndpoint = "https://localhost:5001/api/person";
+    private Person[] persons;
+    private Person editPerson = new();
+    private string editRowStyle = "none";
+    private string newPersonName;
+    private string newPersonSurname;
+    private int newPersonAge;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetPersons();
+    }
+
+    private async Task GetPersons()
+    {
+        persons = await Http.GetFromJsonAsync<Person[]>(ServiceEndpoint);
+    }
+
+    private void EditPerson(Guid id)
+    {
+        editPerson = persons.Single(i => i.Id == id);
+        editRowStyle = "table-row";
+    }
+
+    private async Task AddPerson()
+    {
+        var addItem = new Person {Name = newPersonName, Surname = newPersonSurname, Age = newPersonAge};
+        await Http.PostAsJsonAsync(ServiceEndpoint, addItem);
+        newPersonName = string.Empty;
+        newPersonSurname = string.Empty;
+        newPersonAge = 0;
+        await GetPersons();
+        editRowStyle = "none";
+    }
+
+    private async Task SavePerson()
+    {
+        await Http.PutAsJsonAsync($"{ServiceEndpoint}/{editPerson.Id}", editPerson);
+        await GetPersons();
+        editRowStyle = "none";
+    }
+
+    private async Task DeletePerson(Guid id)
+    {
+        await Http.DeleteAsync($"{ServiceEndpoint}/{id}");
+        await GetPersons();
+        editRowStyle = "none";
+    }
+
+    public class Person
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public int Age { get; set; }
+        public DateTime DateAdd { get; set; }
+    }
+
+}

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
@@ -18,6 +19,7 @@ namespace APIGateway
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddOcelot();
         }
 
@@ -28,7 +30,11 @@ namespace APIGateway
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors(policy => 
+                policy.WithOrigins("http://localhost:5040", "https://localhost:5041")
+                    .AllowAnyMethod()
+                    .WithHeaders(HeaderNames.ContentType, HeaderNames.Authorization)
+                    .AllowCredentials());
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
