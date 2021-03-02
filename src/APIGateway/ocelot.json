@@ -6,7 +6,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5021
+          "Port": 5020
         }
       ],
       "UpstreamPathTemplate": "/api/item",
@@ -18,7 +18,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5021
+          "Port": 5020
         }
       ],
       "UpstreamPathTemplate": "/api/item/{id}",
@@ -30,7 +30,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5031
+          "Port": 5030
         }
       ],
       "UpstreamPathTemplate": "/api/person",
@@ -42,7 +42,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5031
+          "Port": 5030
         }
       ],
       "UpstreamPathTemplate": "/api/person/{id}",
@@ -50,6 +50,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:5001"
+    "BaseUrl": "https://localhost:5000"
   }
 }
