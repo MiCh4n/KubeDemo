@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: editorapi
+spec:
+  selector:
+    matchLabels:
+      app: editorapi
+  template:
+    metadata:
+      labels:
+        app: editorapi
+    spec:
+      containers:
+      - name: server
+        image: editorapi
+        resources:
+          requests:
+              cpu: 100m
+              memory: 64Mi
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 5030
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: editorapi
+spec:
+  type: ClusterIP
+  selector:
+    app: editorapi
+  ports:
+  - port: 5030
+    targetPort: 5030
+

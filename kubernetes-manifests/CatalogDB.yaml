@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogdb
+spec:
+  selector:
+    matchLabels:
+      app: catalogdb
+  template:
+    metadata:
+      labels:
+        app: catalogdb
+    spec:
+      containers:
+      - name: server
+        image: mongo:4.4.4
+        resources:
+          requests:
+              cpu: 100m
+              memory: 64Mi
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - mountPath: /data/db
+          name: catalog-data
+        volumes:
+        - name: catalog-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalogdb
+spec:
+  type: ClusterIP
+  selector:
+    app: catalogdb
+  ports:
+  - port: 27017
+    targetPort: 27017

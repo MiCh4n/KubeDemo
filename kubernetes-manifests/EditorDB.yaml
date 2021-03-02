@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: editordb
+spec:
+  selector:
+    matchLabels:
+      app: editordb
+  template:
+    metadata:
+      labels:
+        app: editordb
+    spec:
+      containers:
+      - name: server
+        image: mongo:4.4.4
+        resources:
+          requests:
+              cpu: 100m
+              memory: 64Mi
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - mountPath: /data/db
+          name: editor-data
+        volumes:
+        - name: editor-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: editordb
+spec:
+  type: ClusterIP
+  selector:
+    app: editordb
+  ports:
+  - port: 27017
+    targetPort: 27018
