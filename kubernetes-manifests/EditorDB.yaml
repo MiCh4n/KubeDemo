@@ -26,9 +26,9 @@ spec:
         volumeMounts:
         - mountPath: /data/db
           name: editor-data
-        volumes:
+      volumes:
         - name: editor-data
-        emptyDir: {}
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

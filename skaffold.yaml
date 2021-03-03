@@ -1,0 +1,31 @@
+apiVersion: skaffold/v2beta12
+kind: Config
+metadata:
+  name: kubedemo
+build:
+  artifacts:
+  - image: apigateway
+    context: src/APIGateway
+    docker:
+      dockerfile: Dockerfile
+  - image: catalogapi
+    context: src/Catalog.API
+    docker:
+      dockerfile: Dockerfile
+  - image: editorapi
+    context: src/Editor.API
+    docker:
+      dockerfile: Dockerfile
+  - image: frontend
+    context: src/WebSPA
+    docker:
+      dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+    - kubernetes-manifests/CatalogDB.yaml
+    - kubernetes-manifests/EditorDB.yaml
+    - kubernetes-manifests/apigateway.yaml
+    - kubernetes-manifests/catalogapi.yaml
+    - kubernetes-manifests/editorapi.yaml
+    - kubernetes-manifests/frontend.yaml
