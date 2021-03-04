@@ -1,11 +1,13 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: catalogdb
 spec:
   selector:
     matchLabels:
       app: catalogdb
+  serviceName: catalogdb
+  replicas: 3
   template:
     metadata:
       labels:
@@ -14,21 +16,20 @@ spec:
       containers:
       - name: server
         image: mongo:4.4.4
-        resources:
-          requests:
-              cpu: 100m
-              memory: 64Mi
-          limits:
-            cpu: "250m"
-            memory: "256Mi"
         ports:
         - containerPort: 27017
+          name: catalogdb
         volumeMounts:
-        - mountPath: /data/db
-          name: catalog-data
-      volumes:
         - name: catalog-data
-          emptyDir: {}
+          mountPath: /data/db
+  volumeClaimTemplates:
+  - metadata:
+      name: catalog-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 2Gi
 ---
 apiVersion: v1
 kind: Service
