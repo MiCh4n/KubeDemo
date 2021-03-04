@@ -9,7 +9,6 @@ RUN dotnet restore && \
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
-ENV ASPNETCORE_URLS=http://+:5000
 WORKDIR /app
 COPY --from=build /app .
 ENTRYPOINT ["dotnet", "APIGateway.dll"]

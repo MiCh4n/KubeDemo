@@ -55,7 +55,7 @@ namespace Catalog.API
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors(policy => 
-                policy.WithOrigins("http://localhost:5040", "https://localhost:5041")
+                policy.WithOrigins("frontend:80")
                     .AllowAnyMethod()
                     .WithHeaders(HeaderNames.ContentType, HeaderNames.Authorization)
                     .AllowCredentials());
