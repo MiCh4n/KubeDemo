@@ -1,0 +1,1 @@
+helm install consul hashicorp/consul --set global.domain=consul --set global.datacenter=dc1 --set server.replicas=1 --set server.bootstrapExpect=1 --set client.enabled=true --set client.grpc=true --set ui.enabled=true --set connectInject.enabled=true --set controller.enabled=true

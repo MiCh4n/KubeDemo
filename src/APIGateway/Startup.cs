@@ -31,7 +31,7 @@ namespace APIGateway
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors(policy => 
-                policy.WithOrigins("frontend:80")
+                policy.WithOrigins("localhost:80")
                     .AllowAnyMethod()
                     .WithHeaders(HeaderNames.ContentType, HeaderNames.Authorization)
                     .AllowCredentials());

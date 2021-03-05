@@ -11,4 +11,5 @@ RUN dotnet restore && \
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
 COPY --from=build /app .
+ENV ASPNETCORE_URLS=http://+:5000
 ENTRYPOINT ["dotnet", "APIGateway.dll"]
