@@ -32,7 +32,6 @@ spec:
 # metadata:
 #   name: catalogapi
 # spec:
-#   type: ClusterIP
 #   selector:
 #     app: catalogapi
 #   ports:

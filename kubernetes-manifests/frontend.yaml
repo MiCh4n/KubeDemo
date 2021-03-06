@@ -14,7 +14,7 @@ spec:
         app: frontend
       annotations:
         'consul.hashicorp.com/connect-inject': 'true'
-        'consul.hashicorp.com/connect-service-upstreams': 'apigateway:5000'
+        'consul.hashicorp.com/connect-service-upstreams': 'catalogapi:5020, editorapi:5030'
     spec:
       containers:
       - name: server
